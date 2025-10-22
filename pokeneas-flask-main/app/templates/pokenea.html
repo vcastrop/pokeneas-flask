@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ pokenea.nombre }} - Pokenea</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="text-align:center; font-family:Arial; padding:24px;">
+  <h1>{{ pokenea.nombre }}</h1>
+  <img src="{{ pokenea.imagen }}" alt="{{ pokenea.nombre }}" width="240">
+  <p><strong>Frase filosófica:</strong> “{{ pokenea.frase_filosofica }}”</p>
+  <hr>
+  <p><em>ID del contenedor:</em> {{ container_id }}</p>
+  <p><a href="/pokenea-json">Ver JSON</a></p>
+</body>
+</html>
