@@ -1,4 +1,8 @@
+import boto3
 import random
+
+BUCKET_NAME = "pokeneas-valeyjuank"
+s3 = boto3.client("s3", region_name="us-east-1")
 
 POKENEAS = [
     {
@@ -6,7 +10,7 @@ POKENEAS = [
         "nombre": "Leoncini",
         "altura": 1.6,
         "habilidad": "Amigo de lo ajeno",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Leoncini.png",
+        "imagen": "Leoncini.png",
         "frase_filosofica": "Las cosas no son del dueño, son de quien las necesita."
     },
     {
@@ -14,7 +18,7 @@ POKENEAS = [
         "nombre": "Grillachu",
         "altura": 1.5,
         "habilidad": "Farra infinita",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Grillachu.png",
+        "imagen": "Grillachu.png",
         "frase_filosofica": "Sonríe, que la vida es un soplo."
     },
     {
@@ -22,7 +26,7 @@ POKENEAS = [
         "nombre": "Mozita",
         "altura": 1.4,
         "habilidad": "Dañar hogares",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Mozita.png",
+        "imagen": "Mozita.png",
         "frase_filosofica": "Cada quien cuida lo que le interesa y descuida lo que le estorba."
     },
     {
@@ -30,7 +34,7 @@ POKENEAS = [
         "nombre": "Barbie",
         "altura": 0.6,
         "habilidad": "Recuperación rápida",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Barbie.png",
+        "imagen": "Barbie.png",
         "frase_filosofica": "Tú puedes ser lo que quieras ser."
     },
     {
@@ -38,7 +42,7 @@ POKENEAS = [
         "nombre": "Bancolombio",
         "altura": 1.0,
         "habilidad": "Cabello inmóvil",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Bancolombio.png",
+        "imagen": "Bancolombio.png",
         "frase_filosofica": "¿Quieres ser tu propio jefe?"
     },
     {
@@ -46,7 +50,7 @@ POKENEAS = [
         "nombre": "Dineroviejo",
         "altura": 1.2,
         "habilidad": "Evadir impuestos",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Dineroviejo.png",
+        "imagen": "Dineroviejo.png",
         "frase_filosofica": "El que es pobre, es pobre porque quiere."
     },
     {
@@ -54,7 +58,7 @@ POKENEAS = [
         "nombre": "Alternito",
         "altura": 0.9,
         "habilidad": "Diseñar interactivamente",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Alternito.png",
+        "imagen": "Alternito.png",
         "frase_filosofica": "Hay personas que se odian, porque un día se quisieron."
     },
     {
@@ -62,10 +66,24 @@ POKENEAS = [
         "nombre": "Undergolio",
         "altura": 1.8,
         "habilidad": "Ser original",
-        "imagen": "https://pokeneas-valenyjuank.s3.us-east-2.amazonaws.com/Undergolio.png",
+        "imagen": "Undergolio.png",
         "frase_filosofica": "Si no es oversized, ahí no es."
     }
 ]
 
+def get_presigned_url(filename):
+    try:
+        url = s3.generate_presigned_url(
+            "get_object",
+            Params={"Bucket": BUCKET_NAME, "Key": filename},
+            ExpiresIn=3600
+        )
+        return url
+    except Exception as e:
+        print("Error generando URL:", e)
+        return None
+
 def get_random_pokenea():
-    return random.choice(POKENEAS)
+    pokenea = random.choice(POKENEAS)
+    pokenea["imagen"] = get_presigned_url(pokenea["imagen"])
+    return pokenea
